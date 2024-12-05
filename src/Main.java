@@ -179,14 +179,14 @@ public class Main {
 
                 // Обработка точек с использованием стримов
                 Polyline polyline = points.stream()
-                        .distinct() // Убираем дубликаты по координатам
                         .map(p -> new Point(p.getX(), Math.abs(p.getY()))) // Преобразуем отрицательные значения Y в положительные
                         .sorted(Comparator.comparing(Point::getX)) // Сортируем по координате X
+                        .distinct() // Убираем дубликаты по координатам
                         .collect(Collectors.collectingAndThen(Collectors.toList(), Polyline::new)); // Собираем результат в ломаную
 
                 System.out.println("\n" + polyline);
             } break;
-//
+
             // Задание 7.2
             case "8": {
                 PeopleProcessor processor = new PeopleProcessor();
