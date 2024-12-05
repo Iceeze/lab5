@@ -4,6 +4,7 @@ import z2.MeowHandler;
 import z2.Meowable;
 import z3.UniqueListHandler;
 import z4.Athlete;
+import z4.AthleteResults;
 import z5.UniqueCharsInWords;
 import z6.QueueReversal;
 import z7.Point;
@@ -88,46 +89,8 @@ public class Main {
             case "4": {
                 String filePath = "src/z4/input.txt"; // Файл с входными данными
                 try {
-                    // Открытие файла
                     File file = new File(filePath);
-                    Scanner scanFile = new Scanner(file);
-
-                    // Чтение данных о количестве спортсменов и видов спорта
-                    int numberOfAthletes = Integer.parseInt(scanFile.nextLine());
-                    int numberOfSports = Integer.parseInt(scanFile.nextLine());
-
-                    List<Athlete> athletes = new ArrayList<>();
-
-                    // Чтение данных о спортсменах
-                    for (int i = 0; i < numberOfAthletes; i++) {
-                        String line = scanFile.nextLine();
-                        String[] parts = line.split(" ");
-                        String surname = parts[0];
-                        String name = parts[1];
-
-                        // Вычисление суммы баллов
-                        int totalScore = 0;
-                        for (int j = 2; j < 2 + numberOfSports; j++) {
-                            totalScore += Integer.parseInt(parts[j]);
-                        }
-
-                        athletes.add(new Athlete(surname, name, totalScore));
-                    }
-
-                    // Сортировка спортсменов по сумме баллов в порядке убывания
-                    Collections.sort(athletes, Comparator.comparing(Athlete::getTotalScore).reversed());
-
-                    // Присваивание мест спортсменам
-                    int rank = 1;
-                    for (int i = 0; i < athletes.size(); i++) {
-                        if (i > 0 && athletes.get(i).getTotalScore() < athletes.get(i - 1).getTotalScore()) {
-                            rank++; // Если баллы меньше, обновляем место
-                        }
-                        System.out.println(athletes.get(i) + " " + rank);
-                    }
-
-                    scanFile.close(); // Закрытие файла
-
+                    AthleteResults.getAthleteResults(file);
                 } catch (FileNotFoundException e) {
                     System.out.println("Файл не найден: " + filePath);
                 } catch (NumberFormatException e) {
