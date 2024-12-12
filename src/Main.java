@@ -1,7 +1,8 @@
 import z1.Fraction;
 import z2.Cat;
-import z2.MeowHandler;
+import z2.MeowManager;
 import z2.Meowable;
+import z2.MeowingCounterDecorator;
 import z3.UniqueListHandler;
 import z4.Athlete;
 import z4.AthleteResults;
@@ -45,11 +46,11 @@ public class Main {
                     denom = getValidInt("Введите знаменатель: ", scanner);
                 }
 
-                Fraction fraction = new Fraction(numer, denom);
+                Fraction<Integer> fraction = new Fraction<>(numer, denom);
                 System.out.println("Дробь: " + fraction);
                 System.out.println("Кэшированное вещественное значение : " + fraction.getDecimalValue());
 
-                Fraction fraction2 = new Fraction(numer, denom);
+                Fraction<Integer> fraction2 = new Fraction<>(numer, denom);
 
                 numer = getValidInt("Введите новый числитель: ", scanner);
                 fraction.setNumerator(numer); // Новый числитель
@@ -70,11 +71,23 @@ public class Main {
 
             // Задание 2.1
             case "2": {
-                System.out.print("Введите имя для кота: ");
-                String catName = scanner.next();
-                Cat cat = new Cat(catName);
-                MeowHandler.makeAllMeow(new Meowable[] {cat, cat, cat});  // Кот мяукает 3 раза
-                System.out.println(cat + " мяукал " + cat.getMeowCount() + " раз(а).");
+                Cat vasya = new Cat("Вася");
+                Cat petya = new Cat("Петя");
+
+                // Оборачиваем котов в декоратор, который будет считать количество мяуканий
+                MeowingCounterDecorator decoratedVasya = new MeowingCounterDecorator(vasya);
+                MeowingCounterDecorator decoratedPetya = new MeowingCounterDecorator(petya);
+
+                // Создаем массив мяукающих объектов
+                Meowable[] cats = {decoratedVasya, decoratedPetya, decoratedVasya};
+
+                // Создаем менеджера для вызова метода meow() у каждого объекта
+                MeowManager meowManager = new MeowManager();
+                meowManager.makeThemMeow(cats); // Все коты мяукают
+
+                // Выводим количество мяуканий для каждого кота
+                System.out.println(vasya + " мяукал " + decoratedVasya.getMeowCount() + " раз(а).");
+                System.out.println(petya + " мяукал " + decoratedPetya.getMeowCount() + " раз(а).");
             } break;
 
             // Задание 3.10

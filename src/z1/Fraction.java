@@ -1,50 +1,64 @@
 package z1;
 
-public class Fraction implements FractionInterface {
-    private int numerator; // Числитель
-    private int denominator; // Знаменатель
-    private Double cachedDecimalValue = null; // Кэш вещественного значения
+import java.util.Objects;
 
-    // Конструктор с числителем и знаменателем
-    public Fraction(int numerator, int denominator) {
-        if (denominator <= 0) throw new IllegalArgumentException("Знаменатель должен быть положительным.");
+public class Fraction<T extends Integer> implements FractionInterface<T> {
+    private T numerator;
+    private T denominator;
+    private Double cachedDecimalValue;
+    private boolean isCacheValid;
+
+    // Конструктор
+    public Fraction(T numerator, T denominator) {
+        if (denominator.intValue() <= 0) throw new IllegalArgumentException("Ошибка! Знаменатель должен быть положительным.");
         this.numerator = numerator;
         this.denominator = denominator;
+        this.isCacheValid = false;
     }
 
-    // Возвращает вещественное значение дроби
+    // Получение вещественного значения с кэшированием
     @Override
     public double getDecimalValue() {
-        if (cachedDecimalValue == null) cachedDecimalValue = (double) numerator / denominator;
+        if (!isCacheValid) {
+            cachedDecimalValue = numerator.doubleValue() / denominator.doubleValue();
+            isCacheValid = true;
+        }
         return cachedDecimalValue;
     }
 
-    // Установка числителя
+    // Установка числителя и сброс кэша
     @Override
-    public void setNumerator(int numerator) {
+    public void setNumerator(T numerator) {
         this.numerator = numerator;
-        cachedDecimalValue = null;
+        this.isCacheValid = false; // кэш становится невалидным
     }
 
-    // Установка знаменателя
+    // Установка знаменателя с проверкой
     @Override
-    public void setDenominator(int denominator) {
-        if (denominator <= 0) throw new IllegalArgumentException("Знаменатель должен быть положительным!");
-        this.denominator = denominator;
-        cachedDecimalValue = null;
+    public void setDenominator(T denominator) {
+        if (denominator.intValue() <= 0) throw new IllegalArgumentException("Ошибка! Знаменатель должен быть положительным.");
+        else this.denominator = denominator;
+        this.isCacheValid = false;
     }
 
-    // Строковое представление дроби
+    // Переопределение toString()
     @Override
     public String toString() {
         return numerator + "/" + denominator;
     }
 
-    // Сравнение дробей
+    // Переопределение equals() для сравнения дробей
     @Override
-    public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (!(obj instanceof Fraction other)) return false;
-        return this.numerator * other.denominator == this.denominator * other.numerator;
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Fraction<?> fraction = (Fraction<?>) o;
+        return Objects.equals(numerator, fraction.numerator) && Objects.equals(denominator, fraction.denominator);
+    }
+
+    // Переопределение hashCode()
+    @Override
+    public int hashCode() {
+        return Objects.hash(numerator, denominator);
     }
 }

@@ -1,7 +1,7 @@
 package z1;
 
-public interface FractionInterface {
+public interface FractionInterface<T extends Number> {
     double getDecimalValue();
-    void setNumerator(int numerator);
-    void setDenominator(int denominator);
+    void setNumerator(T numerator);
+    void setDenominator(T denominator);
 }

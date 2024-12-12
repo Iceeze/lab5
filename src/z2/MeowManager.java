@@ -1,7 +1,7 @@
 package z2;
 
-public class MeowHandler {
-    public static void makeAllMeow(Meowable[] meowables) {
+public class MeowManager {
+    public void makeThemMeow(Meowable[] meowables) {
         for (Meowable meowable : meowables) {
             meowable.meow();
         }
